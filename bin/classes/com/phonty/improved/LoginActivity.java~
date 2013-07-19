@@ -1,0 +1,253 @@
+/*
+ * Copyright (C) 2012 PhontyCom - Belize
+ * 
+ * This file is part of Phonty(http://www.phonty.com/android)
+ * 
+ * Phonty is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This source code is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this source code; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+package com.phonty.client;
+
+import org.sipdroid.sipua.ui.Receiver;
+import org.sipdroid.sipua.ui.RegisterService;
+import org.sipdroid.sipua.ui.Settings;
+
+import com.phonty.client.R;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.*;
+
+public class LoginActivity extends Activity {
+	private  Intent intent;
+	private  Button loginButton;
+	private  Button registerButton;
+	private  EditText loginEdit;
+	private  EditText passwordEdit;
+	private  CheckBox checkbox;
+	public  ProgressDialog loginProgressDialog;
+	@Override
+	 public void onCreate(Bundle savedInstanceState) {
+		 /* If auth exist, don't show this activity */ 
+			if (Login.isConnected) {
+				finish();
+		    	intent = new Intent();
+			    intent.setClass(LoginActivity.this,PhontyActivity.class);
+		    	startActivity(intent);
+			}
+			
+		 super.onCreate(savedInstanceState);		 
+	     setContentView(R.layout.login);
+     	 
+	     loginButton = (Button)findViewById(R.id.login);
+	     registerButton = (Button)findViewById(R.id.register);
+	     loginEdit = (EditText)findViewById(R.id.loginEdit);
+	     passwordEdit = (EditText)findViewById(R.id.passwordEdit);
+     	 checkbox = (CheckBox) findViewById(R.id.storeBox);
+
+     	 
+	     loginButton.setEnabled(false);
+	     loginButton.setOnClickListener(new OnClickListener(){
+	      @Override
+	      public void onClick(View arg0) {
+	    	  LoginTask loginTask = new LoginTask();
+	    	  loginTask.execute();
+	      	}
+	      });
+	     
+	     registerButton.setOnClickListener(new OnClickListener(){
+	      @Override
+	      public void onClick(View arg0) {
+	    	  intent = new Intent();
+		      intent.setClass(LoginActivity.this,RegisterActivity.class);
+	    	  startActivity(intent);
+	      	}
+	      });
+
+	     loginEdit.addTextChangedListener(new TextWatcher(){
+		  @Override
+		  public void afterTextChanged(Editable arg0) {
+	        if (arg0.length()>3) {
+	   	     loginButton.setEnabled(true);
+	        }
+	        if (arg0.length()<3) {
+		   	 loginButton.setEnabled(false);
+	        }
+	      }
+	      public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	      public void onTextChanged(CharSequence s, int start, int before, int count){}
+    	  }); 
+	 }
+	 
+	 @Override
+	 public boolean onCreateOptionsMenu(Menu menu) {
+	     MenuInflater inflater = getMenuInflater();
+	     inflater.inflate(R.menu.main, menu);
+	     return true;
+	 }
+	 
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item) {
+	     AlertDialog alertDlg = null;
+		// Handle item selection
+	     switch (item.getItemId()) {
+	     case R.id.quitMenuButton:
+			Login.logout();
+	
+			/*
+			if (Receiver.engine(this) != null) {
+				Receiver.pos(true);
+				Receiver.engine(this).halt();
+				Receiver.mSipdroidEngine = null;
+				Receiver.reRegister(0);
+			} */
+			stopService(new Intent(this,RegisterService.class));
+			stopService(new Intent(this,PhontyService.class));
+			finish();
+	        return true;
+	        
+	     case R.id.resendMenuButton:
+		   	  intent = new Intent();
+		      intent.setClass(LoginActivity.this,ResendActivity.class);
+	    	  startActivity(intent);
+	    	  return true;   
+	        
+	     case R.id.aboutMenuButton:
+			if (alertDlg != null) 
+			{
+				alertDlg.cancel();
+			}
+			alertDlg = new AlertDialog.Builder(this)
+			.setMessage(getString(R.string.about).replace("\\n","\n").replace("${VERSION}","10"))
+			.setTitle(getString(R.string.menu_about))
+			.setIcon(R.drawable.icon22)
+			.setCancelable(true)
+			.show();
+			return true;
+	     default:
+	        return super.onOptionsItemSelected(item);
+	     }
+	 }
+	 
+	 /* Add contact task */
+	 class LoginTask extends AsyncTask<String, Integer, Boolean> {
+		 	String phone;
+		 	String password;
+		 	ProgressDialog progDialog;
+			   
+			  @Override
+			  protected void onPreExecute() {
+				  progDialog = new ProgressDialog(LoginActivity.this);
+	              progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	              progDialog.setMessage(getString(R.string.loginin));
+	              progDialog.show();
+	          }
+		 	
+			protected Boolean doInBackground(String... number_name) {
+		    	  phone = loginEdit.getText().toString();
+		    	  password = passwordEdit.getText().toString();
+		      	  Login login = new Login(phone,password, getResources().getText(R.string.login_url).toString(),getApplicationContext());
+		      	  return login.process();
+			}
+				
+			protected void onProgressUpdate(Integer... progress) {}
+		    protected void onPostExecute(Boolean result) {
+		    	progDialog.dismiss();
+		    	if (result) {
+		      	  if (Login.SESSION_COOKIE != null) {
+		      		  ContactsDbHelper contacts = new ContactsDbHelper(getApplicationContext());
+		      		  contacts.clean();
+		      		  		      		  
+			      	  Editor edit = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+			      	  edit.putString(Settings.PREF_USERNAME, phone);
+			      	  edit.putString(Settings.PREF_PASSWORD, password);
+			      	  edit.putString(Settings.PREF_SERVER, "sip.phonty.com");
+				 	  edit.putString(Settings.PREF_PREF, "ASK");				
+					  edit.putString(Settings.PREF_PROTOCOL, "udp");
+					  edit.putBoolean(Settings.PREF_3G, true);
+					  edit.putBoolean(Settings.PREF_EDGE, true);
+					  edit.putBoolean(Settings.PREF_VPN, true);
+					  edit.putBoolean(Settings.PREF_WLAN, true);
+
+					  edit.putBoolean("setmode", false);
+					  edit.putBoolean("MWI_enabled", true);
+					  edit.putString("codecs_new", "18 9 8 0 97 3 106 ");					  
+					  
+					  edit.putString("G729", "3g");
+					  edit.putString("speex_new", "never");
+					  edit.putString("BV16_new", "never");
+					  edit.putString("GSM_new", "never");
+					  edit.putString("PCMU_new", "never");
+					  edit.putString("PCMA_new", "wlan");
+					  edit.putString("H722 HD Voice_new", "never");
+					  
+
+			      	  /* Store the password */
+			      	  if (checkbox.isChecked()) edit.putBoolean("fillpassword", true);
+			      	  else edit.putBoolean("fillpassword", false);
+			      	  
+			      	  edit.commit();
+			      	  
+		      		  intent = new Intent();
+		      	  	  intent.setClass(LoginActivity.this,PhontyActivity.class);
+		      	  	  
+		      	  	  startActivity(intent);
+		      	  	  finish();
+
+		      	  }
+		    	} else {
+		    			Toast.makeText(getApplicationContext(),getResources().getText(R.string.failed).toString(), 10).show();
+		    			}
+		    }
+	 }
+	 
+	 @Override
+	 public void onResume() {
+	    String loginPref,passwordPref;
+	    boolean fillPassword;
+		super.onResume();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+		loginPref = prefs.getString(Settings.PREF_USERNAME,"");
+		passwordPref = prefs.getString(Settings.PREF_PASSWORD,"");
+		fillPassword = prefs.getBoolean("fillpassword",false);
+		if (loginPref != null) {
+			 loginEdit.setText(loginPref);
+		}
+    	 if (fillPassword) {
+	         checkbox.setChecked(true);
+	         if (passwordPref != null) passwordEdit.setText(passwordPref);
+    	 }
+	 }
+	
+	 @Override
+	 public void onPause() {
+		 super.onPause();
+	 }
+}

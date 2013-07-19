@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PhontyTheme" parent="@android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:imageButtonStyle">@style/PhontyCallButton</item>
+    </style>
+    <style name="listViewStyle" parent="@android:attr/listViewStyle">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="PhontyCallButton" parent="@android:style/Widget.ImageButton">
+    	<item name="android:background">@drawable/call_button</item>
+	</style>	
+</resources>

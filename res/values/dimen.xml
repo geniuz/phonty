@@ -1,0 +1,7 @@
+
+    <resources>
+        <dimen name="call_button_radius">4px</dimen>
+        <dimen name="call_button_padding">4px</dimen>
+		<dimen name="call_button_stroke">1px</dimen>
+            
+        </resources>
