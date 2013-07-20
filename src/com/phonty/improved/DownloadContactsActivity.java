@@ -33,7 +33,6 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.phonty.improved.R;
 
 import android.app.Activity;

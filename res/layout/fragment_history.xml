@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HIstoryFragment" >
+
+
+ 
+     <ListView
+            android:id="@+id/callsList"
+            android:divider="@color/gray" 
+            android:dividerHeight="1dp"      
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+     </ListView>
+         
+    <TextView
+			    android:id="@+id/empty"
+			    android:layout_width="fill_parent"
+			    android:layout_height="fill_parent"
+			    android:layout_gravity="center"
+			    android:gravity="center"
+			    android:padding="10dp"
+			    android:text="@string/emptylist" />
+    
+ </FrameLayout>
