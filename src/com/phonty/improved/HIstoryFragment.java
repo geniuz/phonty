@@ -10,6 +10,7 @@ import com.phonty.improved.CallsActivity.CallsTask;
 import com.phonty.improved.PhontyService.Tasks;
   
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class HIstoryFragment extends Fragment {
 	private CallsTask task;
 	private String country = "ru";
 	private TextView tip;
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {    	    	

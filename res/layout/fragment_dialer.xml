@@ -1,14 +1,60 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border"
+    android:padding="1dp"
     tools:context=".DialerFragment" >
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:fontFamily="roboto-boldcondensed"
+                android:inputType="phone"
+                android:text="89127574956"
+                android:textColor="#149"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:typeface="normal" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="C"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="roboto-condensed"
+            android:text="Moroco MTS 12 USD per minute"
+            android:textColor="#666"
+            android:textColorLink="#333"
+            android:textSize="10sp" />
+
+    </LinearLayout>
 
 </FrameLayout>

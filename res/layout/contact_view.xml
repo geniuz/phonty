@@ -2,8 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/picture_unknown" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/contactId"
         android:layout_width="wrap_content"
@@ -22,11 +36,13 @@
 
     <TextView
         android:id="@+id/contactPhone"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"   
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/contactPhone"/>
+        android:layout_marginLeft="5px"
+        android:layout_marginRight="5px"
+        android:text="12"
+        android:textColor="@color/contactPhone" />
+
         android:text="TextView" />
 
 </LinearLayout>

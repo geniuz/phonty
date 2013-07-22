@@ -4,23 +4,42 @@
     android:layout_height="match_parent"
     tools:context=".HIstoryFragment" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
- 
-     <ListView
+        <fragment
+            android:id="@+id/fragment1"
+            android:name="com.phonty.improved.DialerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:layout="@layout/fragment_dialer" />
+
+        <ListView
             android:id="@+id/callsList"
-            android:divider="@color/gray" 
-            android:dividerHeight="1dp"      
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/border"
+			android:divider="#C7C7C7"
+			android:dividerHeight="1dp"
+            android:fadingEdge="none"
+            android:padding="1dp" >
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/empty"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-     </ListView>
-         
-    <TextView
-			    android:id="@+id/empty"
-			    android:layout_width="fill_parent"
-			    android:layout_height="fill_parent"
-			    android:layout_gravity="center"
-			    android:gravity="center"
-			    android:padding="10dp"
-			    android:text="@string/emptylist" />
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/emptylist" />
+
+    </LinearLayout>
     
  </FrameLayout>
